@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#173f68">
+  <meta name="description" content="לוח חב״ד — לחיות עם הזמן. לוח עברי, ימי חב״ד, זמני היום ושיעורים יומיים.">
+  <title>לוח חב״ד — לחיות עם הזמן</title>
+  <style>
+    :root{color-scheme:light;--navy:#173f68;--blue:#2e6595;--ink:#172a3d;--muted:#607286;--paper:#f5f7fa;--line:#e3e9ef;--green:#2c7460}
+    *{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:Arial,"Noto Sans Hebrew",sans-serif;line-height:1.65}
+    a{color:inherit}header{background:white;border-bottom:1px solid var(--line)}.wrap{width:min(1080px,calc(100% - 36px));margin:auto}
+    nav{height:76px;display:flex;align-items:center;justify-content:space-between}.brand{display:flex;align-items:center;gap:12px;text-decoration:none;font-weight:700;color:var(--navy);font-size:1.2rem}.brand img{width:48px;height:48px;border-radius:13px}.navlinks{display:flex;gap:22px;color:var(--muted);font-size:.94rem}.navlinks a{text-decoration:none}.navlinks a:hover{color:var(--blue)}
+    main{padding:52px 0 64px}.hero{display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:42px;padding:42px 0 58px}.eyebrow{color:var(--green);font-weight:700;letter-spacing:.02em}.hero h1{font-size:clamp(2.35rem,5vw,4.25rem);line-height:1.12;color:var(--navy);margin:12px 0 16px}.hero p{font-size:1.12rem;color:var(--muted);max-width:610px;margin:0 0 24px}.button{display:inline-flex;align-items:center;gap:8px;text-decoration:none;border-radius:12px;padding:12px 18px;background:var(--navy);color:white;font-weight:700}.button:hover{background:#235986}.art{min-height:260px;border:1px solid #dce6ef;border-radius:28px;background:linear-gradient(145deg,#fff,#e7f0f7);display:grid;place-items:center;box-shadow:0 16px 48px #173f6812}.art img{width:150px;height:150px;border-radius:36px;box-shadow:0 12px 26px #173f6825}
+    .features{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px}.card .icon{font-size:1.35rem}.card h2{font-size:1.05rem;color:var(--navy);margin:8px 0 4px}.card p{margin:0;color:var(--muted);font-size:.95rem}.privacy-callout{margin-top:22px;padding:19px 22px;background:#eaf2f8;border-radius:16px;color:#31516d}.privacy-callout a{font-weight:700;color:var(--navy)}
+    footer{background:white;border-top:1px solid var(--line);padding:22px 0;color:var(--muted);font-size:.9rem}.foot{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}.foot a{color:var(--navy)}
+    @media(max-width:720px){.hero{grid-template-columns:1fr;gap:24px;padding:34px 0 38px}.art{min-height:200px}.art img{width:120px;height:120px}.features{grid-template-columns:1fr}.navlinks{gap:12px}.wrap{width:min(100% - 28px,1080px)}}
+    @media(max-width:420px){nav{height:68px}.brand{font-size:1.02rem}.brand img{width:42px;height:42px}.navlinks{font-size:.84rem;gap:9px}}
+  </style>
+</head>
+<body>
+  <header><div class="wrap"><nav aria-label="ניווט ראשי">
+    <a class="brand" href="./"><img src="assets/icon.svg" alt="סמל לוח חב״ד"><span>לוח חב״ד</span></a>
+    <div class="navlinks"><a href="#features">מה באפליקציה</a><a href="privacy.html">מדיניות פרטיות</a></div>
+  </nav></div></header>
+  <main class="wrap">
+    <section class="hero">
+      <div><div class="eyebrow">לחיות עם הזמן</div><h1>הזמן היהודי,<br>במקום אחד.</h1>
+        <p>לוח עברי נקי ונוח עם ימי חב״ד והמנהגים הקשורים בהם, זמני היום לפי המיקום שלך ושיעורים יומיים — כדי להתחבר לתאריך ולמשמעות שלו.</p>
+        <a class="button" href="privacy.html">למדיניות הפרטיות <span aria-hidden="true">←</span></a>
+      </div>
+      <div class="art" aria-label="סמל האפליקציה"><img src="assets/icon.svg" alt="לוגו לוח חב״ד"></div>
+    </section>
+    <section id="features" class="features" aria-label="תכונות האפליקציה">
+      <article class="card"><div class="icon" aria-hidden="true">▦</div><h2>לוח עברי ולועזי</h2><p>מעבר בין תאריכים, חגים יהודיים, ימי חב״ד ואירועים אישיים.</p></article>
+      <article class="card"><div class="icon" aria-hidden="true">☼</div><h2>זמני היום</h2><p>זמנים מחושבים לפי המיקום ואזור הזמן שנבחרו.</p></article>
+      <article class="card"><div class="icon" aria-hidden="true">◷</div><h2>לימוד ותזכורות</h2><p>שיעורים יומיים ומעקב אישי, עם אפשרות לתזכורות במכשיר.</p></article>
+    </section>
+    <div class="privacy-callout">רוצה לדעת כיצד נשמרים האירועים, ההעדפות והמיקום? <a href="privacy.html">קרא/י את מדיניות הפרטיות</a>.</div>
+  </main>
+  <footer><div class="wrap foot"><span>לוח חב״ד · לחיות עם הזמן</span><a href="privacy.html">מדיניות פרטיות</a></div></footer>
+</body>
+</html>
+
