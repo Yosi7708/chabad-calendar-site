@@ -12,6 +12,9 @@ window.adsBackend=(()=>{
   if(path==='logout'){try{await request('/auth/v1/logout','POST',{});}finally{session=null;}return {};}
   if(!session)throw Error('Sign in required');
   if(path==='session'){const c=config();return {feedUrl:c.url+'/rest/v1/rpc/ad_feed?apikey='+encodeURIComponent(c.key)};}
+  if(path==='display-settings'&&method==='GET'){const rows=await request('/rest/v1/ad_settings?id=eq.true&select=banner_rotation_seconds');if(!rows.length)throw Error('Missing ad settings migration');return {bannerRotationSeconds:rows[0].banner_rotation_seconds};}
+  if(path==='display-settings'&&method==='POST'){const seconds=Number(data.bannerRotationSeconds);if(!Number.isInteger(seconds)||seconds<5||seconds>300)throw Error('Rotation must be 5–300 whole seconds');const rows=await request('/rest/v1/ad_settings?id=eq.true','PATCH',{banner_rotation_seconds:seconds});if(!rows.length)throw Error('Missing ad settings migration');return {bannerRotationSeconds:rows[0].banner_rotation_seconds};}
+  if(path==='clicks'&&method==='GET'){const since=new Date();since.setUTCDate(since.getUTCDate()-29);const day=since.toISOString().slice(0,10);return request('/rest/v1/ad_click_counts?select=campaign_id,placement,day,clicks&day=gte.'+day+'&order=day.desc');}
   if(path==='campaigns'&&method==='GET')return list();
   if(path==='campaigns'&&method==='POST'){const value={};for(const k of ['title','body','url','imageUrl','videoUrl','banner','popup','status'])value[k]=data[k];value.starts=data.starts||null;value.ends=data.ends||null;
    if(data.id){const result=await request('/rest/v1/ad_campaigns?id=eq.'+encodeURIComponent(data.id)+'&revision=eq.'+Number(data.revision),'PATCH',value);if(!result.length)throw Error('הקמפיין השתנה בלשונית אחרת. רעננו לפני שמירה');}
@@ -22,3 +25,4 @@ window.adsBackend=(()=>{
  async function upload(file,signal){const ext={'image/png':'png','image/jpeg':'jpg','image/webp':'webp','video/mp4':'mp4','video/webm':'webm'}[file.type];if(!ext||!file.size||file.size>(file.type.startsWith('image/')?8:30)*1024*1024)throw Error('סוג או גודל קובץ לא נתמך');const name=crypto.randomUUID()+'.'+ext;await request('/storage/v1/object/ad-media/'+name,'POST',file,signal);return {url:config().url+'/storage/v1/object/public/ad-media/'+name};}
  return {api,upload};
 })();
+
