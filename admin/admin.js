@@ -62,4 +62,3 @@ $('export-rotation').onclick=()=>{
  try{const config=rotation.exportConfig($('rotation-seconds').value),url=URL.createObjectURL(new Blob([JSON.stringify(config,null,2)],{type:'application/json'})),link=document.createElement('a');link.href=url;link.download='banner-rotation-plan.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);$('rotation-status').textContent='יוצא קובץ תכנון. הוא אינו משנה את הפיד או את האפליקציה.';}
  catch(error){$('rotation-status').textContent=error.message;}
 };
-

@@ -26,4 +26,3 @@ window.adsManagerSettings = (() => {
   }
   return {load, save, validate, exportConfig, DEFAULT_SECONDS, MIN_SECONDS, MAX_SECONDS};
 })();
-

@@ -39,4 +39,3 @@ window.adsBackend=(()=>{
 
  return {api,upload,signInWithGoogle,completeGoogleSignIn,hasSession:()=>!!session};
 })();
-

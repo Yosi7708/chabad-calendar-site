@@ -8,4 +8,3 @@
 
 /* Preserve complete still/animated artwork, matching the reader app. */
 .banner-preview{display:block;aspect-ratio:5/1;padding:0;background:#f3f5f8}.banner-preview img{display:block;width:100%;height:100%;max-height:none;object-fit:contain;border-radius:0}.banner-preview>div{display:none}.popup-preview img{object-fit:contain;max-height:60vh}
-
