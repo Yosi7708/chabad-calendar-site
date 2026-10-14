@@ -29,7 +29,14 @@ window.adsBackend=(()=>{
   if(path.startsWith('campaigns/')&&method==='DELETE'){const result=await request('/rest/v1/ad_campaigns?id=eq.'+encodeURIComponent(path.slice(10))+'&revision=eq.'+Number(data.revision),'DELETE');if(!result.length)throw Error('הקמפיין השתנה. רעננו לפני מחיקה');return {};}
   throw Error('פעולה לא נתמכת');
  }
- async function upload(file,signal){const ext={'image/png':'png','image/jpeg':'jpg','image/webp':'webp','video/mp4':'mp4','video/webm':'webm'}[file.type];if(!ext||!file.size||file.size>(file.type.startsWith('image/')?8:30)*1024*1024)throw Error('סוג או גודל קובץ לא נתמך');const name=crypto.randomUUID()+'.'+ext;await request('/storage/v1/object/ad-media/'+name,'POST',file,signal);return {url:config().url+'/storage/v1/object/public/ad-media/'+name};}
+ async function upload(file,signal){
+  if(!session)throw Error('Sign in required');
+  const allowed=['image/png','image/jpeg','image/webp','image/gif','video/mp4','video/webm'];
+  if(!allowed.includes(file.type)||!file.size||file.size>(file.type.startsWith('image/')?8:30)*1024*1024)throw Error('סוג או גודל קובץ לא נתמך');
+  if(file.type==='image/gif'){const header=String.fromCharCode(...new Uint8Array(await file.slice(0,6).arrayBuffer()));if(file.size<14||!['GIF87a','GIF89a'].includes(header))throw Error('תוכן הקובץ אינו GIF תקין');}
+  return request('/functions/v1/upload-ad-media','POST',file,signal);
+ }
+
  return {api,upload,signInWithGoogle,completeGoogleSignIn,hasSession:()=>!!session};
 })();
 
