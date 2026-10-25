@@ -1,0 +1,9 @@
+Store button icon artwork
+
+Artwork source: gilbarbara/logos (SVG Logos), retrieved on 2026-10-25 from:
+- https://raw.githubusercontent.com/gilbarbara/logos/main/logos/apple-app-store.svg
+- https://raw.githubusercontent.com/gilbarbara/logos/main/logos/google-play-icon.svg
+
+The repository is released under CC0-1.0 (https://github.com/gilbarbara/logos/blob/main/LICENSE.txt). The SVG artwork may be reused without attribution. Apple and Google names and marks remain their respective trademarks; CC0 does not grant trademark rights or imply endorsement.
+
+The website buttons are custom download links styled to match the supplied reference. They are not the official store badge artwork. Apple’s official badge usage has separate conditions; this page keeps iOS marked as coming soon until the app is available.
