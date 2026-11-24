@@ -8,3 +8,5 @@
 
 /* Preserve complete still/animated artwork, matching the reader app. */
 .banner-preview{display:block;aspect-ratio:5/1;padding:0;background:#f3f5f8}.banner-preview img{display:block;width:100%;height:100%;max-height:none;object-fit:contain;border-radius:0}.banner-preview>div{display:none}.popup-preview img{object-fit:contain;max-height:60vh}
+
+.push-panel{margin:18px 0;display:grid;grid-template-columns:minmax(200px,1fr) minmax(300px,1.5fr);gap:12px 24px;align-items:start}.push-panel h3{margin:0}.push-panel form{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}.push-panel form label:nth-child(3),.push-panel form label:nth-child(4),.push-panel form button{grid-column:1/-1}.push-panel form button{justify-self:start}.push-panel #push-status{grid-column:1/-1;margin:0}@media(max-width:690px){.push-panel{grid-template-columns:1fr}.push-panel form{grid-template-columns:1fr}.push-panel form label,.push-panel form button{grid-column:1!important}.push-panel form button{width:100%}}
