@@ -22,6 +22,7 @@ window.adsBackend=(()=>{
   if(path==='display-settings'&&method==='GET'){const rows=await request('/rest/v1/ad_settings?id=eq.true&select=banner_rotation_seconds');if(!rows.length)throw Error('Missing ad settings migration');return {bannerRotationSeconds:rows[0].banner_rotation_seconds};}
   if(path==='display-settings'&&method==='POST'){const seconds=Number(data.bannerRotationSeconds);if(!Number.isInteger(seconds)||seconds<5||seconds>300)throw Error('Rotation must be 5–300 whole seconds');const rows=await request('/rest/v1/ad_settings?id=eq.true','PATCH',{banner_rotation_seconds:seconds});if(!rows.length)throw Error('Missing ad settings migration');return {bannerRotationSeconds:rows[0].banner_rotation_seconds};}
   if(path==='clicks'&&method==='GET'){const since=new Date();since.setUTCDate(since.getUTCDate()-29);const day=since.toISOString().slice(0,10);return request('/rest/v1/ad_click_counts?select=campaign_id,placement,day,clicks&day=gte.'+day+'&order=day.desc');}
+  if(path==='push-broadcast'&&method==='POST')return request('/functions/v1/push-broadcast','POST',data);
   if(path==='campaigns'&&method==='GET')return list();
   if(path==='campaigns'&&method==='POST'){const seconds=data.popupSeconds??5;if(!Number.isInteger(seconds)||seconds<1||seconds>15)throw Error('Popup duration must be an integer from 1 to 15 seconds');const value={};for(const k of ['title','body','url','imageUrl','videoUrl','banner','popup','status','popupSeconds'])value[k]=data[k];value.popupSeconds=seconds;value.starts=data.starts||null;value.ends=data.ends||null;
    if(data.id){const result=await request('/rest/v1/ad_campaigns?id=eq.'+encodeURIComponent(data.id)+'&revision=eq.'+Number(data.revision),'PATCH',value);if(!result.length)throw Error('הקמפיין השתנה בלשונית אחרת. רעננו לפני שמירה');}
@@ -39,3 +40,4 @@ window.adsBackend=(()=>{
 
  return {api,upload,signInWithGoogle,completeGoogleSignIn,hasSession:()=>!!session};
 })();
+
