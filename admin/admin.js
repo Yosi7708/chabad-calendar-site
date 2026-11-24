@@ -41,6 +41,7 @@ for(const [id,field] of [['clear-image','imageUrl'],['clear-video','videoUrl']])
 function switchPlacement(next){
  if(busy||next===placement)return;
  if(dirty&&!confirm('לעזוב את השינויים שלא נשמרו?'))return;
+ const pushView=next==='push';
  placement=next;editing=null;dirty=false;form.reset();$('editor').hidden=true;
  for(const type of ['banner','popup']){
   $('tab-'+type).setAttribute('aria-pressed',String(type===placement));
@@ -48,12 +49,18 @@ function switchPlacement(next){
   $(type+'-preview').querySelectorAll('video').forEach(video=>video.pause());
   $(type+'-preview').replaceChildren();
  }
- $('section-title').textContent=next==='banner'?'באנרים מתחלפים':'פופאפים בפתיחה';
+ $('tab-push').setAttribute('aria-pressed',String(pushView));
+ $('push-panel').hidden=!pushView;
+ $('campaign-layout').hidden=pushView;
+ $('clicks-panel').hidden=pushView;
+ $('create').hidden=pushView;
+ $('section-title').textContent=pushView?'הודעות פוש':next==='banner'?'באנרים מתחלפים':'פופאפים בפתיחה';
  $('create').textContent=next==='banner'?'＋ הוספת באנר':'＋ הוספת פופאפ';
- $('placement-help').textContent=next==='banner'?'הוסיפו מספר באנרים נפרדים. כל באנר נשמר עם מדיה, קישור ותזמון משלו.':'פרסומות המופיעות בפתיחת האפליקציה. ניתן להוסיף תמונה או וידאו קצר ולתזמן כל קמפיין בנפרד.';
- $('rotation-panel').hidden=next!=='banner';renderList();
+ $('placement-help').textContent=pushView?'שלחו עדכון לכל מי שאישר התראות. בחרו יעד באפליקציה או קישור חיצוני.':next==='banner'?'הוסיפו באנרים מתחלפים. כל באנר נשמר עם מדיה, קישור ותזמון משלו.':'נהלו הודעות קופצות שמופיעות בפתיחת האפליקציה. אפשר להוסיף תמונה או וידאו ולתזמן כל הודעה בנפרד.';
+ $('rotation-panel').hidden=next!=='banner';
+ if(!pushView)renderList();
 }
-for(const type of ['banner','popup'])$('tab-'+type).onclick=()=>switchPlacement(type);
+for(const type of ['banner','popup','push'])$('tab-'+type).onclick=()=>switchPlacement(type);
 const rotation=window.adsManagerSettings;
 $('rotation-seconds').value=rotation.load();
 $('rotation-form').onsubmit=async e=>{
