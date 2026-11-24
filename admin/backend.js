@@ -1,13 +1,17 @@
 'use strict';
 window.adsBackend=(()=>{
- const sessionKey='chabad-calendar-admin-session-v1';
+ const sessionKey='chabad-calendar-admin-session-v2';
+ const legacySessionKey='chabad-calendar-admin-session-v1';
  const verifierKey='chabad-calendar-admin-pkce-verifier-v1';
+ const maxSessionAge=7*24*60*60*1000;
+ // Remember this browser for at most one week from sign-in. The absolute
+ // deadline is preserved when Supabase rotates the access/refresh tokens.
  let session=loadSession();
  function config(){const c=window.ADS_CONFIG;if(!c?.key||!/^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(c.url))throw Error('טרם הוגדר חיבור Supabase באתר');return c;}
- function loadSession(){try{const c=window.ADS_CONFIG,raw=localStorage.getItem(sessionKey+':'+(c?.url||''));if(!raw)return null;const value=JSON.parse(raw);return typeof value?.access_token==='string'&&typeof value?.refresh_token==='string'&&Number.isFinite(Number(value.expires_at))?value:null;}catch{return null;}}
- function setSession(value){try{if(value)localStorage.setItem(sessionKey+':'+config().url,JSON.stringify(value));else localStorage.removeItem(sessionKey+':'+(window.ADS_CONFIG?.url||''));}catch{if(value)throw Error('לא ניתן לשמור את ההתחברות בדפדפן. אפשרו אחסון אתר ונסו שוב.');}session=value;}
- function clearSession(){session=null;try{localStorage.removeItem(sessionKey+':'+(window.ADS_CONFIG?.url||''));sessionStorage.removeItem(verifierKey);}catch{}}
- async function request(path,method='GET',body,signal){const c=config();if(session&&Date.now()>session.expires_at*1000-60000&&path.indexOf('/auth/')!==0){const r=await fetch(c.url+'/auth/v1/token?grant_type=refresh_token',{method:'POST',headers:{apikey:c.key,'Content-Type':'application/json'},body:JSON.stringify({refresh_token:session.refresh_token})});if(!r.ok){clearSession();throw Error('פג תוקף ההתחברות — יש להתחבר מחדש');}setSession(await r.json());}
+ function loadSession(){try{const c=window.ADS_CONFIG,oldKey=legacySessionKey+':'+(c?.url||''),key=sessionKey+':'+(c?.url||'');localStorage.removeItem(oldKey);const raw=localStorage.getItem(key);if(!raw)return null;const saved=JSON.parse(raw);if(typeof saved?.session?.access_token!=='string'||typeof saved?.session?.refresh_token!=='string'||!Number.isFinite(Number(saved.session.expires_at))||!Number.isFinite(Number(saved.started_at))||Date.now()-Number(saved.started_at)>=maxSessionAge){localStorage.removeItem(key);return null;}return {...saved.session,_adminStartedAt:Number(saved.started_at)};}catch{return null;}}
+ function setSession(value){const startedAt=Number(session?._adminStartedAt)||Date.now();session={...value,_adminStartedAt:startedAt};try{localStorage.setItem(sessionKey+':'+config().url,JSON.stringify({session:value,started_at:startedAt}));}catch{throw Error('לא ניתן לשמור את ההתחברות בדפדפן. אפשרו אחסון אתר ונסו שוב.');}}
+ function clearSession(){session=null;try{localStorage.removeItem(sessionKey+':'+(window.ADS_CONFIG?.url||''));localStorage.removeItem(legacySessionKey+':'+(window.ADS_CONFIG?.url||''));sessionStorage.removeItem(verifierKey);}catch{}}
+ async function request(path,method='GET',body,signal){const c=config();if(session&&Date.now()-session._adminStartedAt>=maxSessionAge){clearSession();throw Error('תוקף ההתחברות לשבוע הסתיים — יש להתחבר מחדש');}if(session&&Date.now()>session.expires_at*1000-60000&&path.indexOf('/auth/')!==0){const r=await fetch(c.url+'/auth/v1/token?grant_type=refresh_token',{method:'POST',headers:{apikey:c.key,'Content-Type':'application/json'},body:JSON.stringify({refresh_token:session.refresh_token})});if(!r.ok){clearSession();throw Error('פג תוקף ההתחברות — יש להתחבר מחדש');}setSession(await r.json());}
  const r=await fetch(c.url+path,{method,signal,headers:{apikey:c.key,...(session?{Authorization:'Bearer '+session.access_token}:{}),...(body instanceof File?{'Content-Type':body.type}:{'Content-Type':'application/json'}),Prefer:'return=representation'},...(body!==undefined?{body:body instanceof File?body:JSON.stringify(body)}:{})});const text=await r.text();let data;try{data=text?JSON.parse(text):null;}catch{throw Error('תגובה לא תקינה מהשרת');}if(!r.ok)throw Error(data?.message||data?.msg||data?.error_description||'הפעולה נכשלה');return data;}
  function row(a){return {...a,starts:a.starts||'',ends:a.ends||'',displayStatus:a.status!=='active'?a.status:a.ends&&Date.parse(a.ends)<=Date.now()?'expired':a.starts&&Date.parse(a.starts)>Date.now()?'scheduled':'live'};}
  async function list(){return (await request('/rest/v1/ad_campaigns?order=updated_at.desc')).map(row);}
